@@ -110,7 +110,7 @@ namespace Linq
                                 Console.WriteLine("Enter Category Id");
                                 int categoryId = Convert.ToInt32(Console.ReadLine());
 
-                                db.Books.Remove(new Book()
+                                db.Books.Update(new Book()
                                 {
                                     Id = book.Id,
                                     Name = name,
