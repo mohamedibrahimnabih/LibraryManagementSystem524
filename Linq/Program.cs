@@ -137,6 +137,22 @@ namespace Linq
                         }
                         break;
                     case "3":
+                        {
+                            Console.WriteLine("Enter Book Id To Edit It: ");
+                            int bookId = Convert.ToInt32(Console.ReadLine());
+
+                            var book = db.Books.AsNoTracking().SingleOrDefault(b => b.Id == bookId);
+
+                            if(book is null)
+                                Console.WriteLine("Book Not Founded");
+                            else
+                            {
+                                db.Books.Remove(book);
+                                db.SaveChanges();
+
+                                Console.WriteLine("Delete Book Successfully");
+                            }
+                        }
                         break;
                     case "4":
                         break;
