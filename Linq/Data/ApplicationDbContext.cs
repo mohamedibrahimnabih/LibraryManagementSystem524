@@ -25,7 +25,7 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<UserBook> UserBooks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=LibraryManagementSystem524;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder/*.UseLazyLoadingProxies()*/.UseSqlServer("Data Source=.;Initial Catalog=LibraryManagementSystem524;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -94,10 +94,10 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("user_books");
 
-            entity.HasOne(d => d.Role).WithMany(p => p.UserBooks)
-                .HasForeignKey(d => d.RoleId)
+            entity.HasOne(d => d.Book).WithMany(p => p.UserBooks)
+                .HasForeignKey(d => d.BookId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__user_book__RoleI__3F466844");
+                .HasConstraintName("FK__user_book__BookI__3F466844");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserBooks)
                 .HasForeignKey(d => d.UserId)

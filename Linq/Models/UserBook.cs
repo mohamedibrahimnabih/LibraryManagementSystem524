@@ -9,9 +9,9 @@ public partial class UserBook
 
     public int UserId { get; set; }
 
-    public int RoleId { get; set; }
+    public int BookId { get; set; }
 
-    public virtual Book Role { get; set; } = null!;
+    public virtual Book Book { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
 }

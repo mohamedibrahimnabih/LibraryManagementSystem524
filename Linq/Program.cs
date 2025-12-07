@@ -21,7 +21,9 @@ namespace Linq
                 Console.WriteLine("4. Display Books");
                 Console.WriteLine("5. Search Book By Name");
                 Console.WriteLine("6. Search Book By Prices");
-                Console.WriteLine("7. .....");
+                Console.WriteLine("7. Show Quantity in Each Category");
+                Console.WriteLine("8. Show User Name, Book Name");
+                Console.WriteLine("9. .....");
 
                 Console.WriteLine("Enter Your Selection: ");
                 string selection = Console.ReadLine();
@@ -162,19 +164,43 @@ namespace Linq
                             Console.WriteLine("Enter Page Number");
                             int page = Convert.ToInt32(Console.ReadLine());
 
-                            var books = db.Books.Skip((page - 1) * 10).Take(10)
+                            //var books = db.Books
+                            //    .Skip((page - 1) * 10)
+                            //    .Take(10)
+                            //    .OrderBy(e => e.Name)
+                            //    .ThenByDescending(e => e.Rate)
+                            //    .Join(db.Books, b => b.CategoryId, c => c.Id, (b, c) => new
+                            //    {
+                            //        b.Id,
+                            //        BrandName = b.Name,
+                            //        b.Author,
+                            //        CategoryName = c.Name
+                            //    });
+
+                            var books = db.Books
+                                .Include(e => e.Category)
+                                .Skip((page - 1) * 10)
+                                .Take(10)
                                 .OrderBy(e => e.Name)
                                 .ThenByDescending(e => e.Rate)
                                 .Select(e => new
                                 {
                                     e.Id,
-                                    e.Name,
-                                    e.Author
+                                    BrandName = e.Name,
+                                    e.Author,
+                                    CategoryName = e.Category.Name
                                 });
+
+                            //var books = db.Books
+                            //    .Skip((page - 1) * 10)
+                            //    .Take(10)
+                            //    .OrderBy(e => e.Name)
+                            //    .ThenByDescending(e => e.Rate)
+                            //    .ToList();
 
                             foreach (var item in books)
                             {
-                                Console.WriteLine($"Id: {item.Id}, Name: {item.Name}, Author: {item.Author}");
+                                Console.WriteLine($"Id: {item.Id}, Brand Name: {item.BrandName}, Author: {item.Author}, Category Name: {item.CategoryName}");
                             }
                         }
 
@@ -186,10 +212,23 @@ namespace Linq
 
                             /* YOUR CODE HERE */
                             // STEP 1: filter By Name
-                            // STEP 2: Order By Name, then by rate
-                            // STEP 3: Select id, name, author only
+                            Console.WriteLine("Enter Book Name to search it: ");
+                            string name = Console.ReadLine().Trim().ToLower();
 
-                            foreach (var item in books)
+                            books = books.Where(e => e.Name.Trim().ToLower().Contains(name));
+
+                            // STEP 2: Order By Name, then by rate
+                            books = books.OrderBy(e => e.Name).ThenBy(e => e.Rate);
+
+                            // STEP 3: Select id, name, author only
+                            var newBooks = books.Select(e => new
+                            {
+                                e.Id,
+                                e.Name,
+                                e.Author
+                            });
+
+                            foreach (var item in newBooks)
                             {
                                 Console.WriteLine($"Id: {item.Id}, Name: {item.Name}, Author: {item.Author}");
                             }
@@ -203,17 +242,60 @@ namespace Linq
 
                             /* YOUR CODE HERE */
                             // STEP 1: filter By min price, max price
-                            // STEP 2: Order By prices, rate
-                            // STEP 3: Select id, name, price only
+                            Console.WriteLine("Enter Min Price, Max Price separated by space to search it: ");
+                            string[] prices = Console.ReadLine().Split(" ");
 
-                            foreach (var item in books)
+                            decimal minPrice = Convert.ToInt32(prices[0]);
+                            decimal maxPrice = Convert.ToInt32(prices[1]);
+
+                            books = books.Where(e => e.Price >= minPrice && e.Price <= maxPrice);
+
+                            // STEP 2: Order By prices, rate
+                            books = books.OrderBy(e => e.Price).ThenBy(e => e.Rate);
+
+                            // STEP 3: Select id, name, price only
+                            var newBooks = books.Select(e => new
+                            {
+                                e.Id,
+                                e.Name,
+                                e.Price
+                            });
+
+                            foreach (var item in newBooks)
                             {
                                 Console.WriteLine($"Id: {item.Id}, Name: {item.Name}, Author: {item.Price}");
                             }
                         }
 
                         break;
+                    case "7":
+                        {
 
+                            var groups = db.Books.GroupBy(e => e.CategoryId).Select(g => new
+                            {
+                                g.Key,
+                                Sum = g.Sum(e => e.Quantity)
+                            });
+
+                            foreach(var item in groups)
+                            {
+                                Console.WriteLine($"Key: {item.Key}, Sum: {item.Sum}");
+                            }
+
+                        }
+                        break;
+                    case "8":
+                        {
+                            var userBooks = db.UserBooks.AsQueryable();
+
+                            ////////////////
+
+                            foreach (var item in userBooks)
+                            {
+                                Console.WriteLine($"User Name: {item.User.Name}, Book Name: {item.Book.Name}");
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
