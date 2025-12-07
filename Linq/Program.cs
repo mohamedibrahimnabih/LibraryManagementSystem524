@@ -18,8 +18,10 @@ namespace Linq
                 Console.WriteLine("\n1. Add New Book");
                 Console.WriteLine("2. Update Book");
                 Console.WriteLine("3. Delete Book");
-                Console.WriteLine("4. Search Book");
-                Console.WriteLine("5. ....");
+                Console.WriteLine("4. Display Books");
+                Console.WriteLine("5. Search Book By Name");
+                Console.WriteLine("6. Search Book By Prices");
+                Console.WriteLine("7. .....");
 
                 Console.WriteLine("Enter Your Selection: ");
                 string selection = Console.ReadLine();
@@ -155,9 +157,63 @@ namespace Linq
                         }
                         break;
                     case "4":
+
+                        {
+                            Console.WriteLine("Enter Page Number");
+                            int page = Convert.ToInt32(Console.ReadLine());
+
+                            var books = db.Books.Skip((page - 1) * 10).Take(10)
+                                .OrderBy(e => e.Name)
+                                .ThenByDescending(e => e.Rate)
+                                .Select(e => new
+                                {
+                                    e.Id,
+                                    e.Name,
+                                    e.Author
+                                });
+
+                            foreach (var item in books)
+                            {
+                                Console.WriteLine($"Id: {item.Id}, Name: {item.Name}, Author: {item.Author}");
+                            }
+                        }
+
                         break;
                     case "5":
+
+                        {
+                            var books = db.Books.AsQueryable();
+
+                            /* YOUR CODE HERE */
+                            // STEP 1: filter By Name
+                            // STEP 2: Order By Name, then by rate
+                            // STEP 3: Select id, name, author only
+
+                            foreach (var item in books)
+                            {
+                                Console.WriteLine($"Id: {item.Id}, Name: {item.Name}, Author: {item.Author}");
+                            }
+                        }
+
                         break;
+                    case "6":
+
+                        {
+                            var books = db.Books.AsQueryable();
+
+                            /* YOUR CODE HERE */
+                            // STEP 1: filter By min price, max price
+                            // STEP 2: Order By prices, rate
+                            // STEP 3: Select id, name, price only
+
+                            foreach (var item in books)
+                            {
+                                Console.WriteLine($"Id: {item.Id}, Name: {item.Name}, Author: {item.Price}");
+                            }
+                        }
+
+                        break;
+
                     default:
                         break;
                 }
