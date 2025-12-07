@@ -184,10 +184,7 @@ namespace Linq
                         {
                             var books = db.Books.AsQueryable();
 
-                            /* YOUR CODE HERE */
-                            // STEP 1: filter By Name
-                            // STEP 2: Order By Name, then by rate
-                            // STEP 3: Select id, name, author only
+                            // Solve
 
                             foreach (var item in books)
                             {
@@ -201,10 +198,7 @@ namespace Linq
                         {
                             var books = db.Books.AsQueryable();
 
-                            /* YOUR CODE HERE */
-                            // STEP 1: filter By min price, max price
-                            // STEP 2: Order By prices, rate
-                            // STEP 3: Select id, name, price only
+                            // Solve
 
                             foreach (var item in books)
                             {
