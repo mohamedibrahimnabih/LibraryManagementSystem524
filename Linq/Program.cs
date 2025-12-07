@@ -212,21 +212,8 @@ namespace Linq
 
                             /* YOUR CODE HERE */
                             // STEP 1: filter By Name
-                            Console.WriteLine("Enter Book Name to search it: ");
-                            string name = Console.ReadLine().Trim().ToLower();
-
-                            books = books.Where(e => e.Name.Trim().ToLower().Contains(name));
-
                             // STEP 2: Order By Name, then by rate
-                            books = books.OrderBy(e => e.Name).ThenBy(e => e.Rate);
-
                             // STEP 3: Select id, name, author only
-                            var newBooks = books.Select(e => new
-                            {
-                                e.Id,
-                                e.Name,
-                                e.Author
-                            });
 
                             foreach (var item in newBooks)
                             {
@@ -242,24 +229,8 @@ namespace Linq
 
                             /* YOUR CODE HERE */
                             // STEP 1: filter By min price, max price
-                            Console.WriteLine("Enter Min Price, Max Price separated by space to search it: ");
-                            string[] prices = Console.ReadLine().Split(" ");
-
-                            decimal minPrice = Convert.ToInt32(prices[0]);
-                            decimal maxPrice = Convert.ToInt32(prices[1]);
-
-                            books = books.Where(e => e.Price >= minPrice && e.Price <= maxPrice);
-
                             // STEP 2: Order By prices, rate
-                            books = books.OrderBy(e => e.Price).ThenBy(e => e.Rate);
-
                             // STEP 3: Select id, name, price only
-                            var newBooks = books.Select(e => new
-                            {
-                                e.Id,
-                                e.Name,
-                                e.Price
-                            });
 
                             foreach (var item in newBooks)
                             {
